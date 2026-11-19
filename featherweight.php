@@ -3,10 +3,10 @@
  * Plugin Name:       Featherweight
  * Plugin URI:        https://www.prasatdigital.com
  * Description:       Lighter media in one click: converts every image (JPG, PNG, GIF, BMP, TIFF, HEIC…) to WebP and every video (MP4, MOV, AVI, MKV, WMV…) to WebM, and serves the optimized files to visitors. Originals are never deleted. Formerly Ahnakot Media Optimizer.
- * Version:           2.1.3
+ * Version:           2.1.4
  * Requires at least: 6.0
  * Requires PHP:      7.4
- * Update URI:        https://www.prasatdigital.com/plugins/featherweight/
+ * Update URI:        https://github.com/thhyarith-prog/featherweight
  * Author:            Prasat Digital
  * Author URI:        https://www.prasatdigital.com
  * License:           GPL-2.0-or-later
@@ -18,10 +18,14 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'FEATHERWEIGHT_VERSION', '2.1.3' );
+define( 'FEATHERWEIGHT_VERSION', '2.1.4' );
 define( 'FEATHERWEIGHT_FILE', __FILE__ );
 define( 'FEATHERWEIGHT_DIR', plugin_dir_path( __FILE__ ) );
 define( 'FEATHERWEIGHT_URL', plugin_dir_url( __FILE__ ) );
+
+// Updates come from the GitHub releases of this plugin.
+require_once FEATHERWEIGHT_DIR . 'includes/prasat-updater.php';
+Prasat_Updater::register( __FILE__, 'thhyarith-prog/featherweight' );
 
 require_once FEATHERWEIGHT_DIR . 'includes/class-featherweight.php';
 if ( is_admin() ) {
