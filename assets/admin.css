@@ -1,0 +1,32 @@
+/* Featherweight: page-specific additions to the Prasat UI kit. */
+.fw-hero { display: grid; grid-template-columns: auto 1fr; gap: 28px; align-items: center; }
+.pd-app .fw-hero h2 { font-size: 20px; margin-bottom: 6px; }
+.fw-ring { position: relative; width: 148px; height: 148px; }
+.fw-ring svg { width: 148px; height: 148px; transform: rotate(-90deg); }
+.fw-ring circle { fill: none; stroke-width: 10; }
+.fw-ring .bg { stroke: var(--pd-soft); }
+.fw-ring .fg { stroke: url(#fw-grad); stroke-linecap: round; transition: stroke-dashoffset .4s ease-out; }
+.fw-ring__v { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.fw-ring__v strong { font-size: 32px; font-weight: 700; line-height: 1; color: var(--pd-ink); font-variant-numeric: tabular-nums; }
+.fw-ring__v span { font-size: 12px; color: var(--pd-muted); margin-top: 4px; }
+.fw-status { display: inline-flex; align-items: center; gap: 6px; color: var(--pd-muted); font-size: 13px; font-weight: 600; }
+.fw-status.is-done { color: var(--pd-ok); }
+.fw-spin { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--pd-indigo-line); border-top-color: var(--pd-indigo); animation: fw-spin .8s linear infinite; }
+@keyframes fw-spin { to { transform: rotate(360deg); } }
+.fw-engines { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; margin-top: 8px; }
+
+.fw-log { list-style: none; margin: 8px 0 0; max-height: 360px; overflow: auto; border-top: 1px solid var(--pd-line); }
+.fw-log li { display: flex; align-items: center; gap: 10px; padding: 9px 2px; border-bottom: 1px solid var(--pd-soft); margin: 0; font-size: 13px; }
+.fw-log .m { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--pd-ink); }
+.fw-log .k { margin-left: auto; flex: none; }
+.fw-log .pd-tick--warn { background: #d97706; }
+.fw-log .pd-tick--run { background: var(--pd-indigo); }
+.fw-log li.pd-empty { display: block; text-align: center; border: 0; padding: 24px 0; }
+
+.fw-range { margin: 4px 0 16px; }
+.fw-range label { display: flex; justify-content: space-between; font-weight: 600; color: var(--pd-ink); }
+.fw-range output { font-variant-numeric: tabular-nums; color: var(--pd-indigo-dark); background: var(--pd-indigo-soft); border-radius: 4px; padding: 0 6px; }
+.fw-range input[type="range"] { width: 100%; accent-color: var(--pd-indigo); margin: 8px 0 2px; }
+.fw-field { display: grid; gap: 5px; margin: 16px 0; }
+@media (max-width: 600px) { .fw-hero { grid-template-columns: 1fr; justify-items: center; text-align: center; } .fw-hero .pd-actions { justify-content: center; } }
+@media (prefers-reduced-motion: reduce) { .fw-spin { animation: none; } }
