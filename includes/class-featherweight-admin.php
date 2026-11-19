@@ -141,4 +141,21 @@ class Featherweight_Admin {
 		}
 		return $out;
 	}
+
+	/** Numbers for the Prasat Digital dashboard (Prasat_Hub::render). */
+	public static function dashboard() {
+		$st = self::state();
+		return array(
+			'tiles' => array(
+				array(
+					'area'  => __( 'Images', 'featherweight' ),
+					'value' => (int) $st['pct'] . '%',
+					'label' => __( 'media optimized', 'featherweight' ),
+					'sub'   => sprintf( __( '%d images', 'featherweight' ), $st['img_tot'] ) . ( $st['vid_tot'] ? ' · ' . ( $st['ff'] ? sprintf( __( '%d videos', 'featherweight' ), $st['vid_tot'] ) : __( 'videos stay MP4', 'featherweight' ) ) : '' ),
+					'tone'  => ! $st['img'] ? 'bad' : ( $st['img_left'] ? 'warn' : 'ok' ),
+					'url'   => admin_url( 'admin.php?page=featherweight' ),
+				),
+			),
+		);
+	}
 }

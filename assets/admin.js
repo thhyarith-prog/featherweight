@@ -101,6 +101,7 @@
 	async function run() {
 		running = true;
 		$( 'fw-start' ).disabled = true;
+		$( 'fw-start' ).setAttribute( 'aria-busy', 'true' );
 		$( 'fw-reset' ).disabled = true;
 		setStatus( t.running, true );
 		var fails = 0;
@@ -153,6 +154,7 @@
 			}
 		}
 		running = false;
+		$( 'fw-start' ).removeAttribute( 'aria-busy' );
 		$( 'fw-reset' ).disabled = false;
 		if ( lastLeft > 0 ) { // Not "pct < 100": 1 of 300 left still rounds to 100%.
 			$( 'fw-start' ).disabled = false;

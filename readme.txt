@@ -3,7 +3,7 @@ Tags: webp, webm, image optimization, video, performance
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.1.4
+Stable tag: 2.1.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -36,6 +36,11 @@ Video conversion uses ffmpeg with VP9 support on the server. Many hosts provide 
 * Interface fonts: Inter (The Inter Project Authors) and Noto Sans Khmer (Google), SIL Open Font License 1.1, bundled in assets/fonts.
 
 == Changelog ==
+
+= 2.1.5 =
+* New: the Prasat Digital overview is now a full dashboard: website health with a severity breakdown, "What to fix first", live tiles for every plugin, recent activity, 7-day charts and the Smart AI Optimize (Premium) card.
+* New: Prasat temple loading animations for checks, scans, backups and every progress bar.
+* New: how much of the media library is optimized appears on the Prasat Digital dashboard.
 
 = 2.1.4 =
 * New: updates now come from the plugin's GitHub releases (github.com/thhyarith-prog), with the normal one-click "Update now" and automatic updates.
