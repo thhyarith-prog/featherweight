@@ -4,7 +4,7 @@
 
 <p align="center">Lighter media in one click: every image to WebP and every video to WebM, served to visitors automatically. Originals are never deleted.</p>
 
-<p align="center">Version 2.1.4 · WordPress 6.0+ · PHP 7.4+ · GPL-2.0-or-later · by <a href="https://www.prasatdigital.com">Prasat Digital</a></p>
+<p align="center">Version 2.2.0 · WordPress 6.0+ · PHP 7.4+ · GPL-2.0-or-later · by <a href="https://www.prasatdigital.com">Prasat Digital</a> · <a href="https://www.prasatdigital.com/plugins#featherweight">Plugin page</a></p>
 
 ---
 

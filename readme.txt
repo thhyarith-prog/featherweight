@@ -3,7 +3,7 @@ Tags: webp, webm, image optimization, video, performance
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.1.8
+Stable tag: 2.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -19,6 +19,8 @@ Featherweight is the media optimizer by Prasat Digital (formerly Ahnakot Media O
 * Keeps the original when the converted file would be bigger.
 * New uploads are converted automatically; "Optimize everything" handles the existing library with a live progress ring and activity log.
 * Originals are never deleted.
+* Alt text: the Alt text tab lists every image without it, suggests it from descriptive file names (names like IMG_2041 are skipped), lets you edit it in one place and fills it into pages that left it out. Free.
+* With Prasat Premium, Smart AI looks at each picture and writes the alt text, in English or Khmer to match your site: one image at a time, all at once, automatically for new uploads, or through "Optimize with AI". Bulk changes can be undone.
 
 Pairs with Slipstream (page cache and speed) and Bastion Security by Prasat Digital.
 
@@ -28,6 +30,9 @@ Activate Featherweight: it switches the old plugin off, carries over its setting
 
 == Frequently Asked Questions ==
 
+= What does Smart AI see when it writes alt text? =
+A small copy of the picture (at most 768 pixels wide) with its file name, title and the title of the page it is attached to. Nothing else about your site is sent.
+
 = Videos say "needs ffmpeg" =
 Video conversion uses ffmpeg with VP9 support on the server. Many hosts provide it; if yours installed it in an unusual place, enter the path under Settings. Images work without it.
 
@@ -36,6 +41,11 @@ Video conversion uses ffmpeg with VP9 support on the server. Many hosts provide 
 * Interface fonts: Inter (The Inter Project Authors) and Noto Sans Khmer (Google), SIL Open Font License 1.1, bundled in assets/fonts.
 
 == Changelog ==
+
+= 2.2.0 =
+* New: Alt text tab. See every image without alt text, take a suggestion from its file name, edit it in one place, and fill it into pages that left it out. The health check now counts images without alt text.
+* New (Prasat Premium): Smart AI looks at each picture and writes its alt text, in English or Khmer to match your site: one at a time, "Write all with AI", automatically for new uploads, or through "Optimize with AI" with Undo.
+* Improved: links to a plugin now open its own section of prasatdigital.com/plugins (overview cards, dashboard tiles, the health check and "Visit plugin site").
 
 = 2.1.8 =
 * New: "Optimize with AI" now fixes what is safe to fix, not just lists it. It backs up first with Lifeboat, makes the safe fixes, shows each change under "Fixed for you" with an Undo button, then the AI writes a plan for what is left.

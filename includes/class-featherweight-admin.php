@@ -31,6 +31,10 @@ class Featherweight_Admin {
 		return isset( $_GET['page'] ) && self::SLUG === $_GET['page']; // phpcs:ignore
 	}
 
+	public static function tab() {
+		return isset( $_GET['tab'] ) && 'alt' === $_GET['tab'] ? 'alt' : 'optimize'; // phpcs:ignore WordPress.Security.NonceVerification
+	}
+
 	public static function body_class( $c ) {
 		return self::on_page() ? $c . ' pd-body' : $c;
 	}
@@ -72,6 +76,45 @@ class Featherweight_Admin {
 		wp_enqueue_style( 'featherweight-admin', FEATHERWEIGHT_URL . 'assets/admin.css', array( 'featherweight-ui' ), $v );
 		wp_enqueue_script( 'featherweight-ui', FEATHERWEIGHT_URL . 'assets/prasat-ui.js', array(), $v, true );
 		wp_enqueue_script( 'featherweight-admin', FEATHERWEIGHT_URL . 'assets/admin.js', array( 'featherweight-ui' ), $v, true );
+		if ( 'alt' === self::tab() ) {
+			wp_enqueue_script( 'featherweight-alt', FEATHERWEIGHT_URL . 'assets/alt.js', array( 'featherweight-ui' ), $v . (int) @filemtime( FEATHERWEIGHT_DIR . 'assets/alt.js' ), true ); // phpcs:ignore
+			wp_localize_script(
+				'featherweight-alt',
+				'FeatherweightAlt',
+				array(
+					'ajax'    => admin_url( 'admin-ajax.php' ),
+					'nonce'   => wp_create_nonce( Featherweight_Alt::NONCE ),
+					'premium' => Featherweight_Alt::premium(),
+					'i18n'    => array(
+						'save' => __( 'Save', 'featherweight' ),
+						'saved' => __( 'Saved', 'featherweight' ),
+						'useIt' => __( 'Use suggestion', 'featherweight' ),
+						'writeAi' => __( 'Write with AI', 'featherweight' ),
+						'writing' => __( 'Writing…', 'featherweight' ),
+						'noSuggest' => __( 'The file name says nothing useful: write it yourself.', 'featherweight' ),
+						'noSuggestAi' => __( 'The file name says nothing useful: write it yourself or use AI.', 'featherweight' ),
+						'usedOn' => __( 'Used on: %s', 'featherweight' ),
+						'none' => __( 'Every image has alt text. Well done.', 'featherweight' ),
+						'loading' => __( 'Loading images…', 'featherweight' ),
+						'filled1' => __( 'Added alt text to 1 image from its file name.', 'featherweight' ),
+						'filled' => __( 'Added alt text to %d images from their file names.', 'featherweight' ),
+						'filledNone' => __( 'No file names were descriptive enough. Use Write with AI, or type the alt text.', 'featherweight' ),
+						'undo' => __( 'Undo', 'featherweight' ),
+						'undone' => __( 'Undone.', 'featherweight' ),
+						'bulkRun' => __( 'Smart AI is writing alt text: %1$d done, %2$d left. Keep this page open.', 'featherweight' ),
+						'bulkDone1' => __( 'Smart AI wrote alt text for 1 image.', 'featherweight' ),
+						'bulkDone' => __( 'Smart AI wrote alt text for %d images.', 'featherweight' ),
+						'bulkStop' => __( 'Stopped. %d images done.', 'featherweight' ),
+						'stop' => __( 'Stop', 'featherweight' ),
+						'error' => __( 'Something went wrong. Please try again.', 'featherweight' ),
+						'prev' => __( 'Newer', 'featherweight' ),
+						'next' => __( 'Older', 'featherweight' ),
+						'page' => __( 'Page %1$d of %2$d', 'featherweight' ),
+						'altFor' => __( 'Alt text for %s', 'featherweight' ),
+					),
+				)
+			);
+		}
 		$st = self::state();
 		wp_localize_script(
 			'featherweight-admin',
@@ -108,9 +151,11 @@ class Featherweight_Admin {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( esc_html__( 'Sorry, you are not allowed to access this page.', 'featherweight' ) );
 		}
-		$st = self::state();
-		$o  = wp_parse_args( (array) get_option( Featherweight::OPT, array() ), Featherweight::defaults() );
-		include FEATHERWEIGHT_DIR . 'views/page.php';
+		$st          = self::state();
+		$o           = wp_parse_args( (array) get_option( Featherweight::OPT, array() ), Featherweight::defaults() );
+		$tab         = self::tab();
+		$alt_missing = Featherweight_Alt::counts()['missing'];
+		include FEATHERWEIGHT_DIR . ( 'alt' === $tab ? 'views/alt.php' : 'views/page.php' );
 	}
 
 	/** A setting row with a switch (Prasat kit). */
@@ -135,6 +180,19 @@ class Featherweight_Admin {
 		$out[] = array( 'id' => 'webp_engine', 'status' => $st['img'] ? 'pass' : 'warn', 'severity' => 'medium', 'title' => __( 'The server can make WebP images', 'featherweight' ), 'detail' => $st['img'] ? '' : __( 'PHP has no WebP support (GD or Imagick). Ask your host to enable it.', 'featherweight' ) );
 		if ( $st['img'] ) {
 			$out[] = array( 'id' => 'images_optimized', 'status' => $st['img_left'] ? 'warn' : 'pass', 'severity' => 'low', 'title' => __( 'Images are optimized', 'featherweight' ), 'detail' => $st['img_left'] ? sprintf( __( '%d images are still in their original, heavier format.', 'featherweight' ), $st['img_left'] ) : sprintf( __( 'All %d images have a lighter WebP copy.', 'featherweight' ), $st['img_tot'] ), 'fix_url' => $page, 'fix_label' => __( 'Optimize', 'featherweight' ) );
+		}
+		$alt = Featherweight_Alt::counts();
+		if ( $alt['total'] ) {
+			$out[] = array(
+				'id'        => 'image_alt',
+				'status'    => $alt['missing'] ? 'warn' : 'pass',
+				'severity'  => $alt['missing'] * 2 > $alt['total'] ? 'medium' : 'low',
+				'title'     => __( 'Images have alt text', 'featherweight' ),
+				/* translators: 1: images without alt text, 2: all images */
+				'detail'    => $alt['missing'] ? sprintf( __( '%1$d of %2$d images have no alt text. Screen readers and Google use it to understand your images.', 'featherweight' ), $alt['missing'], $alt['total'] ) : sprintf( __( 'All %d images have alt text.', 'featherweight' ), $alt['total'] ),
+				'fix_url'   => admin_url( 'admin.php?page=featherweight&tab=alt' ),
+				'fix_label' => __( 'Add alt text', 'featherweight' ),
+			);
 		}
 		if ( $st['vid_tot'] && ! $st['ff'] ) {
 			$out[] = array( 'id' => 'video_engine', 'status' => 'info', 'severity' => 'low', 'title' => __( 'Videos stay in their original format', 'featherweight' ), 'detail' => sprintf( __( 'Your server has no ffmpeg, so %d videos can\'t be converted to WebM. Ask your host if you want lighter videos.', 'featherweight' ), $st['vid_tot'] ) );
